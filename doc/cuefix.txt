@@ -1,0 +1,91 @@
+*cuefix.txt*  Plugin help file for cuefix
+
+Author: Chetan Kumar Sanga
+License: MIT License
+
+==============================================================================
+Contents:
+
+1. Introduction      |cuefix|
+2. Commands          |cuefix-cmds|
+3. Controls          |cuefix-ctrl|
+4. Keymaps           |cuefix-maps|
+
+
+==============================================================================
+1. Introduction                                          *cuefix* *cuefix.vim*
+
+Cuefix is a |quickfix| based helper to navigate and mark code errors as fixed
+or discard (e.g. GCC/MISRA errors) and delete fixed error entries ON THE FLY:
+- avoids manual build error log split view and repeated window switching
+- keeps track of unfixed errors (removes fixed errors as users choose)
+- avoid manual quickfix-reloads
+- users can restart vim-cuefix session and continue with unfixed errors
+- helps keep track of multiple error quickfix source files,
+  but only accepts 1 source used per session
+
+Note: To disable cuefix-loading on vim startup, users can set the following
+      global variable in |vimrc| file.
+      :let g:cuefix_no_keymaps = 1
+
+
+==============================================================================
+2. Commands                                                      *cuefix-cmds*
+
+*Cuefo*
+   :Cuefo <file>  - Opens a |cuefix| session using given file
+
+
+==============================================================================
+3. Controls                                                      *cuefix-ctrl*
+
+All |cuefix| Control options are unset by default.
+
+*g:cuefix_no_keymaps*
+  Use    : Enable/disable cuefix keymap setup
+  Values : Any value disables automatic keymap setup on loading cuefix
+  Note   : Recommeneded not to set as keymaps will quicken work with cuefix
+
+
+*g:cuefix_errfmt*
+  Use    : Configures errorformat used by quickfix window
+  Values : Accepts errorformat defined by users to suit user needs
+           to match against quickfix cfile source users provide
+  Note   : If users choose to set this, they MUST set carefully to ensure
+           proper navigation with error lines in user-specific format
+           If users don't set, a default errorformat is used at runtime:
+           %-G#\ %f,%f:%l:%c:%m
+
+
+*g:cuefix_lpos*
+  Use    : Configures line positioning in quickfix
+  Values : Unset   - Normal quickfix behavior without line position control
+           'center'- Positions current line at center of quickfix window
+           'top'   - Positions current line at top of quickfix window
+
+
+*g:cuefix_nohl*
+  Use    : Quickfix entry highlight control
+  Values : Unset   - Quickfix comes up with default highlight configuration
+           Set     - Disables default background highlight on quickfix entry
+                     and then enables cursorline.
+                     Note: terminal/vim colorscheme may interfere with
+                           cursorline
+
+
+==============================================================================
+4. Keymaps                                                       *cuefix-maps*
+
+If |g:cuefix_no_keymaps| is not set, |cuefix| creates following keymaps.
+
+cuefix starter:
+Ctrl+x+q    - Start a cuefix session by asking user for cuefix input file
+
+cuefix navigation and control: These are enabled when a cuefix session starts
+Ctrl+x+Down - Close cuefix session
+Ctrl+Down   - Move to next quickfix entry
+Ctrl+Up     - Move to previous quickfix entry
+
+
+==============================================================================
+vim:tw=78:fo=tcq2mM:ts=8:ft=help:norl
