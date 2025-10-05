@@ -27,6 +27,9 @@ Then reload Vim and run:
 - ```:Cuefo <file>```  
   Opens a Cuefix session using the given file.
 
+- ```:Cuefd```  
+  Deletes current quickfix entry from quickfix window and also quickfix source file.
+
 ## Configuration Options
 
 Cuefix provides configuration options via global variables that can be set in your .vimrc. All of these options are unset by default.
@@ -48,9 +51,11 @@ If ```g:cuefix_no_keymaps``` is not set, Cuefix provides these mappings
 
 - ```Ctrl+x+q``` - Start a Cuefix session (asks for file)
 
-- ```Ctrl+x+Down``` - Close Cuefix session
+- ```Ctrl+d``` - Delete current quickfix entry
 
 - ```Ctrl+Down``` - Jump to next quickfix entry
 
 - ```Ctrl+Up``` - Jump to previous quickfix entry
+
+- ```Ctrl+x+Down``` - Close Cuefix session
 
