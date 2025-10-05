@@ -1,3 +1,13 @@
+" Private function to show error messages
+function! s:Cuefix_ShowErr(msg)
+  redraw
+  echohl ErrorMsg
+  echom "Cuefix: " . a:msg
+  echohl None
+endfunction
+
+
+
 " Private function to delete a specific line from g:cfile file
 function! s:Cuefix_DelLineInCFile(cfile_lnum) abort
   " Vsplit-open quickfix source file and remove specified line
@@ -19,10 +29,10 @@ function! cuefix#Cuefix_Open(fname) abort
   " Ensure we have a proper cfile input and file is accessible
   let g:cfile = ''
   if empty(a:fname)
-    echo "\ncuefix: No filename specified!"
+    call s:Cuefix_ShowErr("No filename specified!")
     return
   elseif !filereadable(a:fname)
-    echo "\ncuefix: File not readable - " . fnameescape(a:fname)
+    call s:Cuefix_ShowErr("File not readable - " . fnameescape(a:fname))
     return
   endif
   let g:cfile = a:fname
@@ -70,8 +80,11 @@ endfunction
 " Cuefix Entry Deleter
 " - Deletes current quickfix entry from quickfix source file
 " - Deletes all invalid lines till next valid entry is found
-" - Delete signifies source file contents considered as fixed
 function! cuefix#Cuefix_Del() abort
+  if !exists('g:cfile') || !filereadable(g:cfile) || len(getqflist()) == 0
+	  call s:Cuefix_ShowErr("Session not found or invalid!")
+	  return
+  endif
   let qfitem = getqflist({'idx': 0, 'items': 0})
   let cfile_lnum = qfitem.idx
   " Remove current quickfix entry (and any following invalid lines)
