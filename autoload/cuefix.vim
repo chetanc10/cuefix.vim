@@ -1,23 +1,3 @@
-" Private function to configure how the quickfix highlight shall be
-" If g:cuefix_nohl is set:
-" - disables quickfix entry highlight background
-" - enables cursorline
-"   NOTE: colorschemes of vim and terminal may effect cursorline drawing
-" If g:cuefix_nohl is not set:
-" - enables quickfix default entry highlight background
-" - disabes cursorline
-function! s:Cuefix_HlCtrl() abort
-  if exists('g:cuefix_nohl')
-    autocmd FileType qf highlight QuickFixLine ctermbg=NONE guibg=NONE
-    autocmd FileType qf setlocal cursorline
-  else
-    autocmd FileType qf highlight clear QuickFixLine
-    autocmd FileType qf setlocal nocursorline
-  endif
-endfunction
-
-
-
 " Private function to delete a specific line from g:cfile file
 function! s:Cuefix_DelLineInCFile(cfile_lnum) abort
   " Vsplit-open quickfix source file and remove specified line
@@ -37,24 +17,25 @@ endfunction
 " - opens quickfix window
 function! cuefix#Cuefix_Open(fname) abort
   " Ensure we have a proper cfile input and file is accessible
-  let g:cfile = a:fname
-  if empty(g:cfile)
+  let g:cfile = ''
+  if empty(a:fname)
     echo "\ncuefix: No filename specified!"
     return
-  elseif !filereadable(g:cfile)
-    echo "\ncuefix: File not readable - " . fnameescape(g:cfile)
+  elseif !filereadable(a:fname)
+    echo "\ncuefix: File not readable - " . fnameescape(a:fname)
     return
   endif
+  let g:cfile = a:fname
 
-  " Setup quickfix input and setup keymaps if user allowed
+  " Setup errorformat, quickfix input and keymaps if user allowed
   if exists('g:cuefix_errfmt')
     set errorformat=g:cuefix_errfmt
   else
     set errorformat=%-G#\ %f,%f:%l:%c:%m
   endif
   exec 'cfile ' . fnameescape(g:cfile)
-  nnoremap <C-d> <C-W><Down>:call cuefix#Cuefix_Del()<CR>
   if !exists('g:cuefix_no_keymaps')
+    nnoremap <C-d> <C-W><Down>:call cuefix#Cuefix_Del()<CR>
     nnoremap <C-x><C-Down> :cclose<CR>
     if exists('g:cuefix_lpos') && g:cuefix_lpos ==# 'top'
       nnoremap <C-Down> :cn<CR><C-w><Down>zt<CR>
@@ -66,7 +47,13 @@ function! cuefix#Cuefix_Open(fname) abort
   endif
 
   " open quickfix after proper configuration
-  call s:Cuefix_HlCtrl()
+  if exists('g:cuefix_nohl')
+    autocmd FileType qf highlight QuickFixLine ctermbg=NONE guibg=NONE
+    autocmd FileType qf setlocal cursorline
+  else
+    autocmd FileType qf highlight clear QuickFixLine
+    autocmd FileType qf setlocal nocursorline
+  endif
   if exists('g:cuefix_lpos')
     if g:cuefix_lpos ==# 'top'
       autocmd FileType qf setlocal scrolloff=0

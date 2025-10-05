@@ -7,9 +7,9 @@ License: MIT License
 Contents:
 
 1. Introduction      |cuefix|
-2. Commands          |cuefix-cmds|
+2. Keymaps           |cuefix-maps|
 3. Controls          |cuefix-ctrl|
-4. Keymaps           |cuefix-maps|
+4. Commands          |cuefix-cmds|
 
 
 ==============================================================================
@@ -26,14 +26,22 @@ or discard (e.g. GCC/MISRA errors) and delete fixed error entries ON THE FLY:
 
 Note: To disable cuefix-loading on vim startup, users can set the following
       global variable in |vimrc| file.
-      :let g:cuefix_no_keymaps = 1
+      :let g:cuefix_loaded = 1
 
 
 ==============================================================================
-2. Commands                                                      *cuefix-cmds*
+2. Keymaps                                                       *cuefix-maps*
 
-*Cuefo*
-   :Cuefo <file>  - Opens a |cuefix| session using given file
+If |g:cuefix_no_keymaps| is not set, |cuefix| creates following keymaps.
+
+cuefix starter:
+Ctrl+x+q    - Start a cuefix session prompting for input file. Refer |Cuefo|
+
+cuefix navigation and control: These are enabled when a cuefix session starts
+Ctrl+Down   - Move to next quickfix entry
+Ctrl+Up     - Move to previous quickfix entry
+Ctrl+d      - Delete current entry and move onto next entry. Refer |Cuefd|
+Ctrl+x+Down - Close cuefix session
 
 
 ==============================================================================
@@ -74,17 +82,14 @@ All |cuefix| Control options are unset by default.
 
 
 ==============================================================================
-4. Keymaps                                                       *cuefix-maps*
+4. Commands                                                      *cuefix-cmds*
 
-If |g:cuefix_no_keymaps| is not set, |cuefix| creates following keymaps.
+*Cuefo*
+   :Cuefo <file>  - Opens a |cuefix| session using given file
 
-cuefix starter:
-Ctrl+x+q    - Start a cuefix session by asking user for cuefix input file
-
-cuefix navigation and control: These are enabled when a cuefix session starts
-Ctrl+x+Down - Close cuefix session
-Ctrl+Down   - Move to next quickfix entry
-Ctrl+Up     - Move to previous quickfix entry
+*Cuefd*
+   :Cuefd         - Deletes current quickfix entry and all non-quickfix lines
+                    after it, and moves onto next valid entry.
 
 
 ==============================================================================
